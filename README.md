@@ -2,7 +2,8 @@
 
 # Install Instructions
 
-Simply click download on the top right and obtain the R script.
+Hover over the file that says area_tool, click it and then press the download button on the top right and obtain the R script.
+![image](https://github.com/user-attachments/assets/99122386-de17-4474-b4e8-7072299664e1)
 
 # What you need before hand
 
