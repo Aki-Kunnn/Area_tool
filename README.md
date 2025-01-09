@@ -6,7 +6,10 @@ Simply click download on the top right and obtain the R script.
 
 # What you need before hand
 
-All of your lines should be in on
+This script assumes a few things:
+
+- All of your lines should be in the same folder, and the naming of the folder should be like this for ex: Line_63
+- Within that folder you should make a text file, it should contain names of the columns of your data: [How to Make a file](https://www.wikihow.com/Make-a-New-File-in-Windows)
 
 # How to Use the tool
 
