@@ -1,4 +1,4 @@
-### Press Control Enter Until Input 1
+### Step 1: Press Control Enter Until the line where it says input 1
 
       # Load necessary libraries
       library(ggplot2)
@@ -285,15 +285,19 @@
         return(combined_df)
       }
 
-#### INPUT1 : specify the path to the results from ImageJ
+#### INPUT1 : specify the path to the results from ImageJ, afterward press control enter until you see input 2
       
-      #path <- "C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir"
-      
-      path <- "C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy"
+      # Put it to the right of the arrow, make sure to make all the back slashes (Looks like this: \ ), a forward slash 
+      # (Looks like this: / ) 
+      path <- "C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy" 
       tester <- tblCreator(path)
    
-      # Helper Function to read data and extract mean and SD
+
+
+######################################################################################################################################
+      
       read_and_process_data <- function(file_path, day) {
+        # Helper Function to read data and extract mean and SD
         data <- read.csv(file_path, header = TRUE)
         
         means <- data[1, ]
@@ -312,115 +316,113 @@
         #print(sds)
       }
       
-# Combines and Normalizes Data
-# Need an extra day? Add the following after day 14: day21,
-preprocessing <- function(day7, day14, day21, nameList){
-  data_7 <- read_and_process_data(day7, 7)
-  data_14 <- read_and_process_data(day14, 14)
-  data_21 <- read_and_process_data(day21, 21)
-  
-  #print(combined_means)
-  
-  combined_means <- bind_rows(data_7$means, data_14$means, data_21$means)
-  combined_sds <- bind_rows(data_7$sds, data_14$sds, data_21$sds)
-  
-  
-  combined_means_filter <- combined_means
-  combined_sds_filter <- combined_sds
-  #note abt filtering, check if everything is there
-  
-  if ("Statistic_Mean" %in% colnames(combined_means)){
-    combined_means_filter <- combined_means %>% select(-Statistic_Mean)
-    
-  }
-  
-  if ("Statistic_SD" %in% colnames(combined_sds)){
-    combined_sds_filter <- combined_sds %>% select(-Statistic_SD)
-    
-  }
-  
-  
-  
-  #print(colnames(combined_means_filter))
-  #print(colnames(combined_sds_filter))
-  
-  #debug checkers:
-  #print(combined_means_filter)
-  #print(combined_sds_filter)
-  
-  combined_data <- merge(combined_means_filter, combined_sds_filter, by = "Day", suffixes = c("_Mean", "_SD"))
-  
-  data_cols <- colnames((combined_data[-1]))
-  
-  final_data <- combined_data %>% select(Day)
-  
-  names <- nameList
-  
-  final_data <- combined_data %>% mutate(across(all_of(names), ~ NA))
-  
-  
-  
-  for (treatment in names){
-    row <- 1
-    
-    #print(paste(treatment, ":"))
-    #print(combined_data[treatment][row,])
-    
-    #print("Combined Data: ")
-    #print(combined_data)
-    for (i in 1:nrow(combined_data)){
-      day7 <- combined_data[treatment][1,]
-      processingVal <- combined_data[treatment][i,]
-      
-      if(treatment == "GEN.X_Mean" || treatment == "GEN.X_SD")
-        print(paste("Treatment:", treatment))
-        print(paste("This is the normalization factor:", day7))
-        print(paste("This is the value being inputted:", processingVal))
-        print(paste("This is the final value:", processingVal / day7))
-        final_data[treatment][row,] <- processingVal / day7
-      
-      #print(combined_data[treatment][i,])
-      row <- row + 1
-      
-      if (row > 4){
-        row <- 1
+      # Need an extra day? Add the following after day 14: day21,
+      preprocessing <- function(day7, day14, day21, nameList){
+        # Combines and Normalizes Data
+        data_7 <- read_and_process_data(day7, 7)
+        data_14 <- read_and_process_data(day14, 14)
+        data_21 <- read_and_process_data(day21, 21)
+        
+        #print(combined_means)
+        
+        combined_means <- bind_rows(data_7$means, data_14$means, data_21$means)
+        combined_sds <- bind_rows(data_7$sds, data_14$sds, data_21$sds)
+        
+        
+        combined_means_filter <- combined_means
+        combined_sds_filter <- combined_sds
+        #note abt filtering, check if everything is there
+        
+        if ("Statistic_Mean" %in% colnames(combined_means)){
+          combined_means_filter <- combined_means %>% select(-Statistic_Mean)
+          
+        }
+        
+        if ("Statistic_SD" %in% colnames(combined_sds)){
+          combined_sds_filter <- combined_sds %>% select(-Statistic_SD)
+          
+        }
+        
+        
+        
+        #print(colnames(combined_means_filter))
+        #print(colnames(combined_sds_filter))
+        
+        #debug checkers:
+        #print(combined_means_filter)
+        #print(combined_sds_filter)
+        
+        combined_data <- merge(combined_means_filter, combined_sds_filter, by = "Day", suffixes = c("_Mean", "_SD"))
+        
+        data_cols <- colnames((combined_data[-1]))
+        
+        final_data <- combined_data %>% select(Day)
+        
+        names <- nameList
+        
+        final_data <- combined_data %>% mutate(across(all_of(names), ~ NA))
+        
+        
+        
+        for (treatment in names){
+          row <- 1
+          
+          #print(paste(treatment, ":"))
+          #print(combined_data[treatment][row,])
+          
+          #print("Combined Data: ")
+          #print(combined_data)
+          for (i in 1:nrow(combined_data)){
+            day7 <- combined_data[treatment][1,]
+            processingVal <- combined_data[treatment][i,]
+            
+            if(treatment == "GEN.X_Mean" || treatment == "GEN.X_SD")
+              print(paste("Treatment:", treatment))
+            print(paste("This is the normalization factor:", day7))
+            print(paste("This is the value being inputted:", processingVal))
+            print(paste("This is the final value:", processingVal / day7))
+            final_data[treatment][row,] <- processingVal / day7
+            
+            #print(combined_data[treatment][i,])
+            row <- row + 1
+            
+            if (row > 4){
+              row <- 1
+            }
+          }
+        }
+        
+        #print(colnames(final_data))
+        if ("X_Mean" %in% colnames(final_data)){
+          final_data <- final_data %>% select(-X_Mean)  
+        }
+        
+        if ("X_SD" %in% colnames(final_data)){
+          final_data <- final_data %>% select(-X_SD)  
+        }
+        
+        print(combined_data)
+        print(final_data)
+        return (final_data)
       }
-    }
-  }
-  
-  #print(colnames(final_data))
-  if ("X_Mean" %in% colnames(final_data)){
-    final_data <- final_data %>% select(-X_Mean)  
-  }
-  
-  if ("X_SD" %in% colnames(final_data)){
-    final_data <- final_data %>% select(-X_SD)  
-  }
-  
-  print(combined_data)
-  print(final_data)
-  return (final_data)
-}
+
+      mmDir = file.path(dirname(path), "MeanMedian")
+      
+      
+      # INPUT2: Specify the line name! For example, 83.2_day_7 change 83.2 to whatever line you want
+      day7_83_2 <- file.path(mmDir, paste0("83.2_day7_", "MM.csv"), sep = "")
+      day14_83_2 <- file.path(mmDir, paste0("83.2_day14_", "MM.csv"), sep = "")
+      day21_83_2 <- file.path(mmDir, paste0("83.2_day21_", "MM.csv"), sep ="")
+      
+      # Also update your nameList accordingly, if you line has certain treatments vs not some
+      nameList83_2 <- c("Water_1_Mean", "Water_2_Mean", "DMSO_1_Mean", "DMSO_2_Mean", "PFOS_Mean", "PFBS_Mean", "GEN.X_Mean", "PFNA_Mean", "PFOA_Mean", "PFHXS_Mean", "Water_1_SD", "Water_2_SD", "DMSO_1_SD",
+                      "DMSO_2_SD", "PFOS_SD", "PFBS_SD", "GEN.X_SD", "PFNA_SD", "PFOA_SD", "PFHXS_SD")
+      
+      df_83_2 <- preprocessing(day7_83_2, day14_83_2, day21_83_2,nameList83_2)
 
 ######################################################################################################################################
-# Where to add your lines and name list, copy paste this section for more lines.
 
-mmDir = file.path(dirname(path), "MeanMedian")
-
-
-# known line name/num, shorten the file path from tblcreator and then add the MeanMedian
-day7_83_2 <- file.path(mmDir, paste0("83.2_day7_", "MM.csv"), sep = "")
-day14_83_2 <- file.path(mmDir, paste0("83.2_day14_", "MM.csv"), sep = "")
-day21_83_2 <- file.path(mmDir, paste0("83.2_day21_", "MM.csv"), sep ="")
-
-nameList83_2 <- c("Water_1_Mean", "Water_2_Mean", "DMSO_1_Mean", "DMSO_2_Mean", "PFOS_Mean", "PFBS_Mean", "GEN.X_Mean", "PFNA_Mean", "PFOA_Mean", "PFHXS_Mean", "Water_1_SD", "Water_2_SD", "DMSO_1_SD",
-                "DMSO_2_SD", "PFOS_SD", "PFBS_SD", "GEN.X_SD", "PFNA_SD", "PFOA_SD", "PFHXS_SD")
-
-#Note that the days 7, 14 have less values, thus less mean?
-
-df_83_2 <- preprocessing(day7_83_2, day14_83_2, day21_83_2,nameList83_2)
-
-######################################################################################################################################
+# Input 3: Update your treatment list, press control enter until you past create plot
 
 treatments <- c("Water_1", "Water_2", "DMSO_1", "DMSO_2", "PFOS", "PFBS", "GEN.X", "PFNA", "PFOA", "PFHXS")
 
