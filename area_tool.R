@@ -5,12 +5,13 @@
       library(dplyr)
       library(tidyr)
       library(broom)
+      library(hash)
+      library(data.table)
       
       
-
-      fileNames <- list()
       
-      tblCreator <- function(path) {
+      # Modify tblCreator to check if the folder is in the day_list
+      tblCreator <- function(path, line_list, day_list, treatment_list) {
         setwd(path)
         table_list <- list()
         folder_names <- list()  # Store folder names for naming MeanMedian files
@@ -27,22 +28,32 @@
         print(lineList)
         
         for (line in lineList) {
+          if (sum(sapply(line_list, function(d) length(grep(d, basename(line), ignore.case = TRUE)))) == 0) {
+            next
+          }
+          
           line_folder <- file.path(combined_folder, basename(line))
           if (!dir.exists(line_folder)) {
             dir.create(line_folder, recursive = TRUE)
           }
           
           timepoints <- list.dirs(line, full.names = TRUE, recursive = FALSE)
-          
-          print(timepoints)
+          #print(timepoints)
           
           for (time in timepoints) {
+            # Check if the timepoint (e.g., day21) is in the day_list
+            
+            if (sum(sapply(day_list, function(d) length(grep(d, basename(time), ignore.case = TRUE)))) == 0) {
+              next
+            }
             
             time_folder <- file.path(line_folder, basename(time))
             if (!dir.exists(time_folder)) {
               dir.create(time_folder, recursive = TRUE)
             }
             
+            #print("Fell in day list")
+            #print(time)
             file_names <- list.files(time, pattern = "\\.csv$", full.names = TRUE, recursive = FALSE)
             
             data_list <- list()
@@ -64,7 +75,10 @@
               max_row <- max(max_row, nrow(df), na.rm = TRUE)
             }
             
+
+            
             table <- data.frame(matrix(NA, nrow = max_row, ncol = length(data_list)))
+            
             
             col <- 1
             for (df in data_list) {
@@ -75,7 +89,7 @@
             colnames(table) <- file_basename_list
             
             if (exists("colSort")) {
-              table <- colSort(table)
+              table <- colSort(table, treatment_list)
             }
             
             folder_name <- basename(time)
@@ -87,6 +101,7 @@
             
             table_list <- append(table_list, list(table))
             folder_names <- append(folder_names, basename(time))  # Store as Line_Day#
+            
           }
         }
         
@@ -96,7 +111,6 @@
         
         return(table_list)
       }
-      
       meanMedian <- function(listOfDF, folder_names) {
         #Function that calculates the mean and medians and puts it into one data table
         listOfMM <- list()
@@ -144,32 +158,61 @@
         # Get column names
         col_names <- colnames(dataframe)
         
-        # Ensure an even number of columns
-        if (length(col_names) %% 2 != 0) {
-          stop("The dataframe must have an even number of columns.")
+        #print(dataframe)
+        counter = hash()
+        
+        
+        for (name in col_names){
+          keys = keys(counter)
+          if (!(name %in% keys)){
+            counter[[name]] = 1
+            
+          }
+          else{
+            counter[[name]] = counter[[name]] + 1
+          }
         }
+          
+        #print(counter)
+        
+        max_row = max(values(counter))
+        
+        
         
         # Create a new dataframe with doubled row size
-        new_row_count <- nrow(dataframe) * 2
-        new_col_count <- length(col_names) / 2
+        new_row_count <- nrow(dataframe) * max_row
+        new_col_count <- length(col_names) * 2
         combined_df <- data.frame(matrix(NA, nrow = new_row_count, ncol = new_col_count))
         
         # Set column names
-        new_col_names <- col_names[seq(1, length(col_names), by = 2)]
-        colnames(combined_df) <- new_col_names
         
+        
+        new_col_names <- inputs$treatment_names
+        
+        
+        colnames(combined_df) <- new_col_names
+
         # Combine every two columns
-        for (i in seq(1, length(col_names), by = 2)) {
-          col1 <- dataframe[, i]
-          col2 <- dataframe[, i + 1]
+        for (name in new_col_names) {
+          #print(paste("Processing Name:", name))
+          cols <- which(colnames(dataframe) == name)  # Find all columns with the same name
+          vec <- do.call(c, dataframe[, cols, drop = FALSE])  # Stack them
+          #print(paste("Combined vector length for", name, "before padding:", length(vec)))
           
-          combined_df[, (i + 1) / 2] <- c(col1, col2)  # Stack second column below first
+          # Pad the vector if it is shorter than the expected length
+          expected_length <- nrow(dataframe) * max(values(counter))
+          if (length(vec) < expected_length) {
+            vec <- c(vec, rep(NA, expected_length - length(vec)))
+          }
+          
+          #print(paste("Combined vector length for", name, "after padding:", length(vec)))
+          combined_df[[name]] <- vec
         }
         
         return(combined_df)
       }
-    
-      colSort <- function(dataframe) {
+      
+      colSort <- function(dataframe, treatment_list) {
         #Helper Function to label and sort the columns
         #print("Col sort is running")
         
@@ -188,79 +231,24 @@
         for (name in rawColNames){
           newName <- ""
           
-          # if (grepl("83", name, ignore.case = TRUE) & !grepl("83.2", name, ignore.case = TRUE)){
-          #   if (grepl("w1", name, ignore.case = TRUE) & grepl("P1", name, ignore.case = TRUE)) {
-          #     newName <- "GEN X"
-          #   } else if (grepl("w2", name, ignore.case = TRUE) & grepl("P1", name, ignore.case = TRUE)) {
-          #     newName <- "PFOS"
-          #   } else if (grepl("w3", name, ignore.case = TRUE) & grepl("P1", name, ignore.case = TRUE)) {
-          #     newName <- "PFBS"
-          #   } else if (grepl("Water", name, ignore.case = TRUE) & grepl("\\d", name)) {
-          #     newName <- sub(".*(Water_\\d+).*", "\\1", name)
-          #   } else if ( grepl("DMSO", name, ignore.case = TRUE) & grepl("\\d", name)) {
-          #     if(grepl("DMSO110", name, ignore.case = TRUE)){
-          #       newName <- sub(".*(DMSO110_\\d+).*", "\\1", name)
-          #     } else {
-          #       newName <- sub(".*(DMSO_\\d+).*", "\\1", name)
-          #       }
-          #   } else if (grepl("w4", name, ignore.case = TRUE) & grepl("p2", name, ignore.case = TRUE)) {
-          #     newName <- "PFNA"
-          #   } else if (grepl("w5", name, ignore.case = TRUE) & grepl("p2", name, ignore.case = TRUE)) {
-          #     newName <- "PFOA"
-          #   } else if (grepl("w6", name, ignore.case = TRUE) & grepl("p2", name, ignore.case = TRUE)) {
-          #     newName <- "PFHXS"
-          #   } else {
-          #     newName <- "unknown"
-          #   }
-            
-          #} 
-        
-        if (grepl("63", name, ignore.case = TRUE) ){
-            if (grepl("w1", name, ignore.case = TRUE) & grepl("Pl1", name, ignore.case = TRUE)) {
-              newName <- "PFNA"
-            } else if (grepl("w1", name, ignore.case = TRUE) & grepl("Pl2", name, ignore.case = TRUE)) {
-              newName <- "GEN X"
-            } else if (grepl("w2", name, ignore.case = TRUE) & grepl("Pl1", name, ignore.case = TRUE)) {
-              newName <- "PFOA"
-            } else if (grepl("Water", name, ignore.case = TRUE) & grepl("\\d", name)) {
-              newName <- sub(".*(Water_\\d+).*", "\\1", name)
-            } else if (grepl("w3", name, ignore.case = TRUE)) {
-              newName <- "PFHXS"
-            } else if (grepl("w4", name, ignore.case = TRUE)) {
-              newName <- "PFBS"
-            } else if (grepl("w5", name, ignore.case = TRUE)) {
-              newName <- "PFOS"
-            } else if (grepl("w6", name, ignore.case = TRUE) & (grepl("pl1", name, ignore.case = TRUE)) ) {
-              newName <- "DMSO_1"
-            } else if (grepl("w2", name, ignore.case = TRUE) & grepl("pl2", name, ignore.case = TRUE)) {
-              newName = "Water_1"
-            }
-            
-          } else {
-            if (grepl("gx", name, ignore.case = TRUE) | grepl("GenX", name, ignore.case = TRUE)) {
-              newName <- "GEN X"
-            } else if (grepl("na", name, ignore.case = TRUE)) {
-              newName <- "PFNA"
-            } else if (grepl("a", name, ignore.case = TRUE) & !grepl("water", name, ignore.case = TRUE)& !grepl("na", name, ignore.case = TRUE)) {
-              newName <- "PFOA"
-            } else if (grepl("hx", name, ignore.case = TRUE) | grepl("hxs", name, ignore.case = TRUE)) {
-              newName <- "PFHXS"
-            } else if (grepl("Water", name, ignore.case = TRUE) & grepl("\\d", name)) {
-              newName <- sub(".*(Water_\\d+).*", "\\1", name)
-            } else if (grepl("DMSO", name, ignore.case = TRUE) & grepl("\\d", name)) {
-              newName <- sub(".*(DMSO_\\d+).*", "\\1", name)
-            } else if (grepl("os", name, ignore.case = TRUE)) {
-              newName <- "PFOS"
-            } else {
-              newName <- "PFBS"
+          for (key in keys(treatment_list)){
+            if(grepl(key, name, ignore.case = TRUE)){
+              newName <- treatment_list[[key]]
+              break
             }
           }
-
+          
+          # If no match was found, keep the original column name
+          if (newName == "") {
+            newName <- name  
+          }
+          
+          
           columnNames <- append(columnNames, newName)
           
         }
         
-
+        
         #print("Column Names: ") 
         #print(columnNames)
         colnames(dataframe) <- columnNames
@@ -272,224 +260,227 @@
         
         
         
-
+        
         # Keep only the columns in the dataframe that match the ordered names, skipping those not present
         
         
         order <- order[order %in% columnNames]
-
+        
         combined_df <- combined_df[, order, drop = FALSE]
-
+        
         
         
         return(combined_df)
       }
-
-#### INPUT1 : specify the path to the results from ImageJ, afterward press control enter until you see input 2
       
-      # Put it to the right of the arrow, make sure to make all the back slashes (Looks like this: \ ), a forward slash 
-      # (Looks like this: / ) 
-      path <- "C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy" 
-      tester <- tblCreator(path)
+      
+      get_user_inputs <- function() {
+        path <- readline(prompt = "Enter the path to the results folder: ")
+        
+        line_input <- readline(prompt = "Enter the Lines you want to run (e.g., '83.2, 63'): ")
+        
+        line_list <- strsplit(line_input, ",")[[1]]
+        line_list <- trimws(line_list)
+        
+        day_input <- readline(prompt = "Enter the day list (e.g., 'day21, day22'): ")
+        
+        # Convert the input string into a list of days
+        day_list <- strsplit(day_input, ",")[[1]]
+        day_list <- trimws(day_list)  # Remove any leading/trailing spaces
+        
+        treatment_input <- readline(prompt = "Enter the treatment list (e.g., 'PFOA, GEN.X'): ")
+        
+        treatment_list <- strsplit(treatment_input, ",")[[1]]
+        treatment_list <- trimws(treatment_list)
+        
+        abb_input <- readline(prompt = "Enter the abbreviated treatment list (e.g., 'OA, gx'), where OA = PFOA, and gx = GEN.X: ")
+        
+        abb_list <- strsplit(abb_input, ",")[[1]]
+        abb_list <- trimws(abb_list)
+        
+        treatment_hash <- hash()
+        
+        for (i in seq_len(length(treatment_list))){
+          treatment_hash[[abb_list[i]]] <- treatment_list[i]
+          
+        }
+        
+        print(treatment_hash)
+        
+        # Return as a list
+        return(list(path = path, line_list = line_list, day_list = day_list, treatment_names = treatment_list, treatment_list = treatment_hash))
+      }
+      
+      #C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy
+      # day21
+      # Water_1, Water_2, DMSO_1, DMSO_2, PFOS, PFBS, GEN X, PFNA, PFOA, PFHXS
+      # Water_1, Water_2, DMSO_1, DMSO_2, os, bs, gx, na, pfoa, hx
+      
+      # Call the function to get user inputs
+      
+      inputs <- get_user_inputs()
+      
+      
+      
+      # Proceed with the tblCreator function
+      tester <- tblCreator(inputs$path, inputs$line_list, inputs$day_list, inputs$treatment_list)
+      
    
 
 
 ######################################################################################################################################
       
-      read_and_process_data <- function(file_path, day) {
-        # Helper Function to read data and extract mean and SD
-        data <- read.csv(file_path, header = TRUE)
+      #path, dayList, line_List, name_List
+      preprocessing <- function(input) {
         
-        means <- data[1, ]
-        sds <- data[3, ]
+        parent_dir <- dirname(input$path)
+        normalized_folder <- file.path(parent_dir, "normalized_Lines")
         
-        # Add 'Day' and '_SD' suffixes to the columns
-        colnames(means) <- paste0(colnames(means), "_Mean")
-        colnames(sds) <- paste0(colnames(sds), "_SD")
-        
-        means$Day <- day
-        sds$Day <- day
-        
-        list(means = means, sds = sds)
-        
-        #print(means)
-        #print(sds)
-      }
-      
-      # Need an extra day? Add the following after day 14: day21,
-      preprocessing <- function(day7, day14, day21, nameList){
-        # Combines and Normalizes Data
-        data_7 <- read_and_process_data(day7, 7)
-        data_14 <- read_and_process_data(day14, 14)
-        data_21 <- read_and_process_data(day21, 21)
-        
-        #print(combined_means)
-        
-        combined_means <- bind_rows(data_7$means, data_14$means, data_21$means)
-        combined_sds <- bind_rows(data_7$sds, data_14$sds, data_21$sds)
-        
-        
-        combined_means_filter <- combined_means
-        combined_sds_filter <- combined_sds
-        #note abt filtering, check if everything is there
-        
-        if ("Statistic_Mean" %in% colnames(combined_means)){
-          combined_means_filter <- combined_means %>% select(-Statistic_Mean)
-          
+        # Ensure the "normalized_Lines" folder exists
+        if (!dir.exists(normalized_folder)) {
+          dir.create(normalized_folder, recursive = TRUE)
         }
         
-        if ("Statistic_SD" %in% colnames(combined_sds)){
-          combined_sds_filter <- combined_sds %>% select(-Statistic_SD)
+        mm_files_all <- list.files(mmDir, full.names = TRUE)
+        
+        lineList <- list.dirs(input$path, full.names = TRUE, recursive = FALSE)
+        #print(lineList)
+        for (line in lineList) {
+          #print(line)
+          # Check if line name matches any item in line_List
+          if (sum(sapply(input$line_list, function(d) length(grep(d, basename(line), ignore.case = TRUE)))) == 0) {
+            next
+          }
           
-        }
-        
-        
-        
-        #print(colnames(combined_means_filter))
-        #print(colnames(combined_sds_filter))
-        
-        #debug checkers:
-        #print(combined_means_filter)
-        #print(combined_sds_filter)
-        
-        combined_data <- merge(combined_means_filter, combined_sds_filter, by = "Day", suffixes = c("_Mean", "_SD"))
-        
-        data_cols <- colnames((combined_data[-1]))
-        
-        final_data <- combined_data %>% select(Day)
-        
-        names <- nameList
-        
-        final_data <- combined_data %>% mutate(across(all_of(names), ~ NA))
-        
-        
-        
-        for (treatment in names){
-          row <- 1
+          line_folder <- file.path(normalized_folder, basename(line))
+          if (!dir.exists(line_folder)) {
+            dir.create(line_folder, recursive = TRUE)
+          }
           
-          #print(paste(treatment, ":"))
-          #print(combined_data[treatment][row,])
+          line_name <- basename(line)
           
-          #print("Combined Data: ")
-          #print(combined_data)
-          for (i in 1:nrow(combined_data)){
-            day7 <- combined_data[treatment][1,]
-            processingVal <- combined_data[treatment][i,]
-            
-            if(treatment == "GEN.X_Mean" || treatment == "GEN.X_SD")
-              print(paste("Treatment:", treatment))
-            print(paste("This is the normalization factor:", day7))
-            print(paste("This is the value being inputted:", processingVal))
-            print(paste("This is the final value:", processingVal / day7))
-            final_data[treatment][row,] <- processingVal / day7
-            
-            #print(combined_data[treatment][i,])
-            row <- row + 1
-            
-            if (row > 4){
-              row <- 1
+          # Use grepl to filter files that contain both the line name and base day.
+          matching_files <- mm_files_all[sapply(mm_files_all, function(f) {
+            grepl(line_name, f, ignore.case = TRUE) && grepl(input$base_day, f, ignore.case = TRUE)
+          })]
+          
+          
+          meanmedian_file <- matching_files[1]
+          mm_data <- read.csv(meanmedian_file)
+          
+          
+          
+          timepoints <- list.dirs(line, full.names = TRUE, recursive = FALSE)
+
+          for (time in timepoints) {
+            # Check if timepoint folder matches any item in dayList
+            if (sum(sapply(input$day_list, function(d) length(grep(d, basename(time), ignore.case = TRUE)))) == 0) {
+              next
             }
+            
+            time_folder <- file.path(line_folder, basename(time))
+            if (!dir.exists(time_folder)) {
+              dir.create(time_folder, recursive = TRUE)
+            }
+            
+            files_time <- list.files(time, full.names = TRUE)
+            
+            data <- read.csv(files_time[1])
+            #print(data)
+            
+            toModify = copy(data)
+            
+            #mm_data$treatment_name[1]
+            
+            for (treatment_name in colnames(toModify)){
+              toModify[[treatment_name]] <- toModify[[treatment_name]] / mm_data[[treatment_name]][1]
+            }
+            
+            output_path <- file.path(time_folder, paste0(basename(time), "_normalized.csv"))
+            
+            write.csv(toModify, output_path, row.names = FALSE)
+            #print(toModify)
           }
         }
-        
-        #print(colnames(final_data))
-        if ("X_Mean" %in% colnames(final_data)){
-          final_data <- final_data %>% select(-X_Mean)  
-        }
-        
-        if ("X_SD" %in% colnames(final_data)){
-          final_data <- final_data %>% select(-X_SD)  
-        }
-        
-        print(combined_data)
-        print(final_data)
-        return (final_data)
       }
-
-      mmDir = file.path(dirname(path), "MeanMedian")
       
+# INPUT2: Specify the line name! For example, 83.2_day_7 change 83.2 to whatever line you want
+    
+      get_user_inputs2 <- function() {
+        path <- readline(prompt = "Enter the path to the combined_Lines folder: ")
+        
+        line_input <- readline(prompt = "Enter the Lines you want to run (e.g., '83.2, 63'): ")
+        
+        line_list <- strsplit(line_input, ",")[[1]]
+        line_list <- trimws(line_list)
+        
+        day_input <- readline(prompt = "Enter the day list (e.g., 'day21, day22'): ")
+        
+        # Convert the input string into a list of days
+        day_list <- strsplit(day_input, ",")[[1]]
+        day_list <- trimws(day_list)  # Remove any leading/trailing spaces
+        
+        base_day <- readline(prompt = "Enter the base day (e.g., 'day7'): ")
+        
+        # Convert the input string into a list of days
+        base_day_list <- strsplit(base_day, ",")[[1]]
+        base_day_list <- trimws(base_day_list)  # Remove any leading/trailing spaces
+        
+        treatment_input <- readline(prompt = "Enter the treatment list (e.g., 'PFOA, GEN.X'): ")
+        
+        treatment_list <- strsplit(treatment_input, ",")[[1]]
+        treatment_list <- trimws(treatment_list)
+        
+        MMnames <- list()
+        
+        for (name in treatment_list){
+          #print(paste0(name, "_Mean"))
+          MMnames <- append(MMnames, paste0(name, "_Mean"))
+          
+        }
+        
+        for (name in treatment_list){
+          #print(paste0(name, "_SD"))
+          MMnames <- append(MMnames, paste0(name, "_SD"))
+          
+        }
+        
+        
+        
+        
+        abb_input <- readline(prompt = "Enter the abbreviated treatment list (e.g., 'OA, gx'), where OA = PFOA, and gx = GEN.X: ")
+        
+        abb_list <- strsplit(abb_input, ",")[[1]]
+        abb_list <- trimws(abb_list)
+        
+        treatment_hash <- hash()
+        
+        for (i in seq_len(length(treatment_list))){
+          treatment_hash[[abb_list[i]]] <- treatment_list[i]
+          
+        }
+        
+        print(treatment_hash)
+        
+        # Return as a list
+        return(list(path = path, line_list = line_list, day_list = day_list, base_day = base_day_list, MMnames = MMnames, treatment_list = treatment_hash))
+      }
       
-      # INPUT2: Specify the line name! For example, 83.2_day_7 change 83.2 to whatever line you want
-      day7_83_2 <- file.path(mmDir, paste0("83.2_day7_", "MM.csv"), sep = "")
-      day14_83_2 <- file.path(mmDir, paste0("83.2_day14_", "MM.csv"), sep = "")
-      day21_83_2 <- file.path(mmDir, paste0("83.2_day21_", "MM.csv"), sep ="")
+      # C:/Users/sword/Downloads/Lab_Data/area_tool/combined_Lines
+      # day21
+      # Water_1, Water_2, DMSO_1, DMSO_2, PFOS, PFBS, GEN X, PFNA, PFOA, PFHXS
+      # Water_1, Water_2, DMSO_1, DMSO_2, os, bs, gx, na, pfoa, hx
       
-      # Also update your nameList accordingly, if you line has certain treatments vs not some
-      nameList83_2 <- c("Water_1_Mean", "Water_2_Mean", "DMSO_1_Mean", "DMSO_2_Mean", "PFOS_Mean", "PFBS_Mean", "GEN.X_Mean", "PFNA_Mean", "PFOA_Mean", "PFHXS_Mean", "Water_1_SD", "Water_2_SD", "DMSO_1_SD",
-                      "DMSO_2_SD", "PFOS_SD", "PFBS_SD", "GEN.X_SD", "PFNA_SD", "PFOA_SD", "PFHXS_SD")
+      inputs2 <- get_user_inputs2()
+      
+      print(inputs2$MMnames)
+      
+      mmDir = file.path(dirname(inputs$path), "MeanMedian")
+        
+      df_83_2 <- preprocessing(inputs2)
       
       df_83_2 <- preprocessing(day7_83_2, day14_83_2, day21_83_2,nameList83_2)
 
 ######################################################################################################################################
 
-# Input 3: Update your treatment list, press control enter until you past create plot
-
-treatments <- c("Water_1", "Water_2", "DMSO_1", "DMSO_2", "PFOS", "PFBS", "GEN.X", "PFNA", "PFOA", "PFHXS")
-
-listdf <- list(df_83_2)
-
-create_plot <- function(treatments, list_data) {
-  # Load necessary library
-  library(ggplot2)
-  library(dplyr)
-  
-  # Define colors for treatments
-  color_map <- setNames(rep("blue", length(treatments)), treatments)
-  
-  # Iterate over each treatment
-  for (treatment in treatments) {
-    color_map[treatment] <- "red"
-    color_map["Water"] <- "blue"
-    
-    mean_col <- paste0(treatment, "_Mean")
-    sd_col <- paste0(treatment, "_SD")
-    
-    # Calculate mean of means for each time point for treatment
-    treatment_summary <- bind_rows(list_data) %>%
-      group_by(Day) %>%
-      summarise(
-        Treatment_Mean = mean(!!sym(mean_col), na.rm = TRUE),
-        Treatment_SD = mean(!!sym(sd_col), na.rm = TRUE) # CHANGE THIS B/C NEED MORE DATA POINTS, after figuring out how to get the day 21 going...
-      )
-    
-    # Use the pre-calculated SD values from your data for error bars
-    DMSO_summary <- bind_rows(list_data) %>%
-      group_by(Day) %>%
-      summarise(
-        DMSO_Mean = mean(DMSO_1_Mean, na.rm = TRUE),
-        DMSO_SD = mean(DMSO_1_SD, na.rm = TRUE)
-      )
-    
-    # Combine both summaries for plotting
-    summary_data <- left_join(treatment_summary, DMSO_summary, by = "Day")
-    
-    print(summary_data)
-    
-    # Create the plot using the SD values from the list_data
-    p <- ggplot(summary_data, aes(x = Day)) +
-      geom_point(aes(y = Treatment_Mean, color = treatment)) +
-      geom_errorbar(aes(ymin = Treatment_Mean - Treatment_SD, ymax = Treatment_Mean + Treatment_SD, color = treatment), width = 0.2) +
-      geom_point(aes(y = DMSO_Mean, color = "Water")) +
-      geom_errorbar(aes(ymin = DMSO_Mean - DMSO_SD, ymax = DMSO_Mean + DMSO_SD, color = "Water"), width = 0.2) +
-      labs(title = paste("AVG_mean_sds_for", treatment, "with Water Control"),
-           x = "Day",
-           y = "Mean Value",
-           color = "Legend") +
-      scale_color_manual(values = color_map) +
-      theme_minimal()
-    
-    # Set directory and save plot
-    parent_dir <- dirname(getwd())
-    new_folder <- file.path(parent_dir, "Graphs")
-    
-    if (!dir.exists(new_folder)) {
-      dir.create(new_folder, recursive = TRUE)
-    }
-    
-    ggsave(filename = file.path(new_folder, paste0(treatment, "_Mean_with_DMSO_Control.png")), plot = p)
-  }
-}
-
-
-create_plot(treatments, listdf)
 
