@@ -7,10 +7,8 @@ Hover over the file that says area_tool, click it and then press the download bu
 
 This script assumes a few things:
 
-- All of your lines should be in the same folder, and the naming of the folder should be like this for ex: Line_63
-- Within that folder you should have all your raw data, the one with all the parameters
-- Also within that folder you should make a text file, it should contain names of the columns of your data.
-  The following link is [how to make a file](https://www.wikihow.com/Make-a-New-File-in-Windows)
+- All of your lines should be in the same folder, and the naming of the folder should be like something like this: "Line_63_OB15_110324"
+- Within the line folder, it should have seperate timepoint folders which contain your actual data, "day7, day14, ..."
 
 # How to Use the tool
 
