@@ -1,6 +1,8 @@
-### Step 1: Press Control Enter Until the line where it says input 1
 
-      # Load necessary libraries
+    # STEP 1: Install All Necessary Packages for the Tool to Run
+      install.packages(c("ggplot2", "dplyr", "tidyr", "broom", "hash", "data.table"))
+    
+    # STEP 2: Load All Necessary Packages for the Tool to Run
       library(ggplot2)
       library(dplyr)
       library(tidyr)
@@ -8,9 +10,9 @@
       library(hash)
       library(data.table)
       
-      
-      
-      # Modify tblCreator to check if the folder is in the day_list
+#######################################################################################################################################      
+    
+    # Step 3: Load all the functions of the tool:
       tblCreator <- function(path, line_list, day_list, treatment_list) {
         setwd(path)
         table_list <- list()
@@ -24,10 +26,13 @@
         }
         
         lineList <- list.dirs(main_folder, full.names = TRUE, recursive = FALSE)
-        print("Line List: ")
-        print(lineList)
+        #print("Line List: ")
+        #print(lineList)
         
         for (line in lineList) {
+          
+          
+          
           if (sum(sapply(line_list, function(d) length(grep(d, basename(line), ignore.case = TRUE)))) == 0) {
             next
           }
@@ -61,6 +66,9 @@
             max_row <- 0
             
             for (file in file_names) {
+              
+              print(file)
+              
               df <- read.csv(file)
               if ("Area" %in% colnames(df)) {
                 df$Area <- suppressWarnings(as.numeric(as.character(df$Area)))
@@ -73,9 +81,10 @@
               file_basename_list <- append(file_basename_list, tools::file_path_sans_ext(basename(file)))
               
               max_row <- max(max_row, nrow(df), na.rm = TRUE)
+              print(df)
             }
             
-
+            
             
             table <- data.frame(matrix(NA, nrow = max_row, ncol = length(data_list)))
             
@@ -100,7 +109,8 @@
             write.csv(table, csv_file, row.names = FALSE)
             
             table_list <- append(table_list, list(table))
-            folder_names <- append(folder_names, basename(time))  # Store as Line_Day#
+            folder_names <- append(folder_names, basename(line))  # Store as Line_Day#
+            
             
           }
         }
@@ -114,6 +124,8 @@
       meanMedian <- function(listOfDF, folder_names) {
         #Function that calculates the mean and medians and puts it into one data table
         listOfMM <- list()
+        
+        
         
         parent_dir = dirname(getwd())
         
@@ -144,7 +156,7 @@
           }
           
           if (!is.null(folder_names[i])) {
-            filename <- file.path(new_folder, paste(folder_names[i], "_MM.csv", sep = ""))
+            filename <- file.path(new_folder, paste(paste0(folder_names[i], paste0("_", inputs$day_list[i])), "_MM.csv", sep = ""))
             write.csv(table, filename)
           }
           
@@ -153,7 +165,6 @@
         
         return(listOfMM)
       }
-      
       combine_columns <- function(dataframe) {
         # Get column names
         col_names <- colnames(dataframe)
@@ -211,7 +222,6 @@
         
         return(combined_df)
       }
-      
       colSort <- function(dataframe, treatment_list) {
         #Helper Function to label and sort the columns
         #print("Col sort is running")
@@ -256,7 +266,7 @@
         combined_df = combine_columns(dataframe)
         
         
-        order <- c("Water_1", "Water_2", "DMSO_1", "DMSO_2", "PFOS", "PFBS", "GEN X", "PFNA", "PFOA", "PFHXS")
+        order <- c(inputs$treatment_names)
         
         
         
@@ -272,12 +282,10 @@
         
         return(combined_df)
       }
-      
-      
       get_user_inputs <- function() {
         path <- readline(prompt = "Enter the path to the results folder: ")
         
-        line_input <- readline(prompt = "Enter the Lines you want to run (e.g., '83.2, 63'): ")
+        line_input <- readline(prompt = "Enter the Lines you want to run: ")
         
         line_list <- strsplit(line_input, ",")[[1]]
         line_list <- trimws(line_list)
@@ -310,17 +318,14 @@
         # Return as a list
         return(list(path = path, line_list = line_list, day_list = day_list, treatment_names = treatment_list, treatment_list = treatment_hash))
       }
-      
-      #C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy
-      # day21
-      # Water_1, Water_2, DMSO_1, DMSO_2, PFOS, PFBS, GEN X, PFNA, PFOA, PFHXS
-      # Water_1, Water_2, DMSO_1, DMSO_2, os, bs, gx, na, pfoa, hx
-      
-      # Call the function to get user inputs
+
+#######################################################################################################################################
+
+      # STEP 4: Press Control Enter and Follow the Prompts On the Terminal:
       
       inputs <- get_user_inputs()
       
-      
+      # STEP 5: Press Control Enter on the Tester and You Will Have Complete This Half of the Code
       
       # Proceed with the tblCreator function
       tester <- tblCreator(inputs$path, inputs$line_list, inputs$day_list, inputs$treatment_list)
