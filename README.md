@@ -35,7 +35,7 @@ You can do the same with this Instructional README file as well, if you'd like t
 - We'll be **Control(Windows)/Command(Mac) + Enter**, to Run the Script
 - You must press both keys at the same time
 
-## For Extracting and Consolidating all Area Columns into one file and Sorting them:
+## For Extracting and Consolidating All Area Columns Into One File And Sorting Them:
 
 This is the first half of the script, at this point the input files are simply the excel sheets straight from ImageJ, the assumption is that you have at least one area column within the file for extraction.
 
