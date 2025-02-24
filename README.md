@@ -71,7 +71,7 @@ Press Control Enter on inputs. Now you should turn your attention to the console
 
 A total of 5 different prompts will appear:
 
-**1. Enter the Path to the results folder:**
+#### **1. Enter the Path to the results folder:**
 
 
 - For Windows, you can simply open the file manager and navigate to the folder with all your lines, simply copy that, **CHANGE ALL BACKSLASHES TO FORWARD SLASHES**, and paste it into the console.
@@ -80,7 +80,7 @@ Before: "C:\Users\User\Lab_Data\area_tool\test_dir"
 After: "C:/Users/User/Lab_Data/area_tool/test_dir"
 ```
 
-**2. Enter the Lines you want to run:**
+#### **2. Enter the Lines you want to run:**
 
 As with your folder naming earlier, input each of the line names that you want to run seperated by commas, (i.e: Line_63, Line_83). The important thing is that it should be within the folder name itself when you named your folders earlier, for example Line_63 was in 
 "Line_63_OB15_110324"
@@ -90,7 +90,7 @@ Example:
 Enter the Lines you want to run: Line_63, Line_83
 ```
 
-**3. Enter the day list:**
+#### **3. Enter the day list:**
 
 Similar to the previous step, enter the days you want to run in a comma seperated format:
 
@@ -99,7 +99,7 @@ Example:
 Enter the days list: day7, day14, day21
 ```
 
-**4. Enter the treatment list:**
+#### **4. Enter the treatment list:**
 
 Follow the comma seperated format. Enter the conditions/treatments you have for all of the data. This will be the names the scripts uses to name the columns, so be sure to enter something you can easily recognize
 
@@ -108,10 +108,10 @@ Example:
 Enter the treatment list: PFOA, GEN X, PFAS, WATER_1, WATER_2
 ```
 
-**5. Enter the abbreviations for the treatment list:**
+#### **5. Enter the abbreviations for the treatment list:**
 
 Follow the comma seperated format. Enter the abbreviations for the conditions/treatments you have for all of the data. 
-#### **IMPORTANT:** 
+##### **IMPORTANT:** 
 - Make sure to put the abbreviations in the same order as you did for the nonabbreviated treatment list. For example, if you put int "PFOA" first, you should thus put the abbreviation "oa" first here. 
 - Also make sure your raw data files from ImageJ contain these abbreviations, this is so the code can recognize which correspond to which! Also be careful to not name anything to similar, i.e: "o" for "condition_o1" and "oa" for PFAS, as this can cause the code to mix up the data.
 
