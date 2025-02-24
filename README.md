@@ -119,7 +119,7 @@ Follow the comma seperated format. Enter the abbreviations for the conditions/tr
 Example:
 Enter the treatment list: oa, gx, as, WATER_1, WATER_2
 
-#Notice how the abbreviations match the treatment list from step 4!
+#Notice how the abbreviations match the treatment list from prompt 4!
 ```
 
 You should now get a confirmation in the console, it'll display a sanity check to make sure your conditions matched the abbreviated list you inputted. No worries if you notice something off, simply run step 4 again.
