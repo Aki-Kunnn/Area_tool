@@ -290,18 +290,18 @@
         line_list <- strsplit(line_input, ",")[[1]]
         line_list <- trimws(line_list)
         
-        day_input <- readline(prompt = "Enter the day list (e.g., 'day21, day22'): ")
+        day_input <- readline(prompt = "Enter the day list: ")
         
         # Convert the input string into a list of days
         day_list <- strsplit(day_input, ",")[[1]]
         day_list <- trimws(day_list)  # Remove any leading/trailing spaces
         
-        treatment_input <- readline(prompt = "Enter the treatment list (e.g., 'PFOA, GEN.X'): ")
+        treatment_input <- readline(prompt = "Enter the treatment list: ")
         
         treatment_list <- strsplit(treatment_input, ",")[[1]]
         treatment_list <- trimws(treatment_list)
         
-        abb_input <- readline(prompt = "Enter the abbreviated treatment list (e.g., 'OA, gx'), where OA = PFOA, and gx = GEN.X: ")
+        abb_input <- readline(prompt = "Enter the abbreviated treatment list: ")
         
         abb_list <- strsplit(abb_input, ",")[[1]]
         abb_list <- trimws(abb_list)
