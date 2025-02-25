@@ -1,3 +1,6 @@
+# Table of Contents:
+- [Install Instructions](#Install-Instructions)
+
 # Install Instructions
 
 Hover over the file that says area_tool, click it and then press the download button on the top right and obtain the R script.
