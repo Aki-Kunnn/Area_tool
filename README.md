@@ -1,5 +1,6 @@
 # Table of Contents:
 - [Install Instructions](#Install-Instructions)
+- [Before Running](#What-you-need-before-Hand)
 - [Tool Usage](#How-to-Use-the-Tool)
   - [Extracting, Consolidating, Sorting](#For-Extracting-and-Consolidating-All-Area-Columns-Into-One-File-And-Sorting-Them)
 
