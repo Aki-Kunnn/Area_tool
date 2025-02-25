@@ -12,21 +12,24 @@ You can do the same with this Instructional README file as well, if you'd like t
   **Folder Format:**
    - All of your lines should be in the same folder, and the naming of the folder should be like something like this: "Line_63_OB15_110324"
    - Within the line folder, it should have seperate timepoint folders which contain your actual data, "day7, day14, ..."
+   - It is recommended that you create a folder contains the R_script itself, and the line folder, as it'll be easier for organization and the script can easily access and create the appropriate folders
 
-  **Example: **
+  **The Reccomended Structure Is Listed Below: **
   ```
-  Folder with all Lines/
-  ├── Line_63_OB15_110324/
-  │   ├── day7/   → actual data
-  │   ├── day14/  → actual data
-  │   └── day21/  → actual data
-  ├── Line_83_OB19_110327/
-  │   ├── day7/   → actual data
-  │   ├── day14/  → actual data
-  │   └── day21/  → actual data
-  .
-  .
-  .
+  Folder With The following:/
+  ├── Area_tool.R
+  ├── Folder With All The Lines/  
+  │   ├── Line_63_OB15_110324/
+  │   │   ├── day7/   → actual data  
+  │   │   ├── day14/  → actual data  
+  │   │   └── day21/  → actual data  
+  │   ├── Line_83_OB19_110327/  
+  │   │   ├── day7/   → actual data  
+  │   │   ├── day14/  → actual data  
+  │   │   └── day21/  → actual data  
+  │   .
+  │   .
+  │   .
   ```
 
 
