@@ -1,5 +1,6 @@
 # Table of Contents:
 - [Install Instructions](#Install-Instructions)
+- [Tool Usage](#How-to-Use-the-Tool)
 
 # Install Instructions
 
