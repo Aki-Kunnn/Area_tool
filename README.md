@@ -8,8 +8,6 @@
 Hover over the file that says area_tool, click it and then press the download button on the top right and obtain the R script.
 ![image](https://github.com/user-attachments/assets/99122386-de17-4474-b4e8-7072299664e1)
 
-You can do the same with this Instructional README file as well, if you'd like to reference it on you personal computer.
-
 # What you need before hand
 
 - **You should have R studio installed to be able to open the script**
