@@ -20,13 +20,13 @@ You can do the same with this Instructional README file as well, if you'd like t
   ├── Area_tool.R
   ├── Folder With All The Lines/  
   │   ├── Line_63_OB15_110324/
-  │   │   ├── day7/   → Raw Image J Files w/Area Column  
-  │   │   ├── day14/  → Raw Image J Files w/Area Column 
-  │   │   └── day21/  → Raw Image J Files w/Area Column  
+  │   │   ├── day7/   → Raw ImageJ Files w/Area Column  
+  │   │   ├── day14/  → Raw ImageJ Files w/Area Column 
+  │   │   └── day21/  → Raw ImageJ Files w/Area Column  
   │   ├── Line_83_OB19_110327/  
-  │   │   ├── day7/   → Raw Image J Files w/Area Column 
-  │   │   ├── day14/  → Raw Image J Files w/Area Column 
-  │   │   └── day21/  → Raw Image J Files w/Area Column 
+  │   │   ├── day7/   → Raw ImageJ Files w/Area Column 
+  │   │   ├── day14/  → Raw ImageJ Files w/Area Column 
+  │   │   └── day21/  → Raw ImageJ Files w/Area Column 
   │   .
   │   .
   │   .
