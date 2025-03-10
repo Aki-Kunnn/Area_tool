@@ -48,7 +48,7 @@ This is the first half of the script, at this point the input files are simply t
 
 ### Step 1: Install All Necessary Packages for the Tool
 
-- <mark>**The first three steps are only necessary when running the script for the first time, or reseting your environment**</mark>
+- <mark>**The first three steps are only necessary when running the script for the first time, or running on a new computer!!!**</mark>
 
 One of the first things you should see when you open up the script for the first time is this window with the code.
 
