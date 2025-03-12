@@ -18,7 +18,7 @@ Hover over the file that says area_tool, click it and then press the download bu
    - Within the line folder, it should have seperate timepoint folders which contain your actual data, "day7, day14, ..."
    - It is recommended that you create a folder contains the R_script itself, and the line folder, as it'll be easier for organization and the script can easily access and create the appropriate folders
 
-  **The Reccomended Structure Is Listed Below:**
+  **The Required Structure Is Listed Below:**
   ```
   Folder With The following:/
   ├── Area_tool.R
