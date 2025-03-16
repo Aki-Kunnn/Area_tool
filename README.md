@@ -75,6 +75,7 @@ Lastly load up the functions for the tool, again simply press control enter unti
 
 Press Control Enter on inputs. Now you should turn your attention to the console right below the code screen, boxed in yellow:
 
+<a id="inputConsole"></a>
 ![inputConsole](https://github.com/user-attachments/assets/1160db8c-0de2-41e5-9125-ca663d47dfd7)
 
 A total of 5 different prompts will appear:
