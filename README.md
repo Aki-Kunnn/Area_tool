@@ -153,7 +153,7 @@ Simply press control enter until your cursor reaches the line with all the hasht
 
 The parameters are **ALMOST** exactly the same as the previous section. However, **base day** is an additional input. We assume that you've run the previous section such that there is a meanMedian directory that contains your base day. For example, let us say you're running this on line 98, timepoint of day 21. Let us say your base day is day 3, make sure that you have a file in the meanMedian folder that has day  3!
 
-**Note: similar to the previous section as well, you must input your parameters into the console, if you need to check where it is, please refer to this ![image](#inputConsole):**
+**Note: similar to the previous section as well, you must input your parameters into the console, if you need to check where it is, please refer to this [image](#inputConsole):**
 ![image](https://github.com/user-attachments/assets/758fdeaa-6f9a-4d99-b40a-f0306ec25607)
 
 
