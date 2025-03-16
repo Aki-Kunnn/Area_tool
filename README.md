@@ -14,7 +14,7 @@ Hover over the file that says area_tool, click it and then press the download bu
 # What you need before hand
 
 - **You should have R studio installed to be able to open the script**
-  - If you don't, please check how to install R (https://cran.rstudio.com/) and R studio here: (https://posit.co/download/rstudio-desktop/)
+  - If you don't, please check how to install R (https://cran.rstudio.com/) and R studio: (https://posit.co/download/rstudio-desktop/)
 
   **Folder Format:**
    - All of your lines should be in the same folder, and the naming of the folder should be like something like this: "Line_63_OB15_110324"
