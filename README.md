@@ -153,7 +153,7 @@ Simply press control enter until your cursor reaches the line with all the hasht
 
 The parameters are **ALMOST** exactly the same as the previous section. However, **base day** is an additional input. We assume that you've run the previous section such that there is a meanMedian directory that contains your base day. For example, let us say you're running this on line 98, timepoint of day 21. Let us say your base day is day 3, make sure that you have a file in the meanMedian folder that has day  3! Run up to mmDir!
 
-**Note: for your inputs, it is similar to the previous section as well. You must input your parameters into the console. If you need to check where it is, please refer to this [image](#inputConsole):**
+**Note: for your inputs, it is similar to the previous section as well. You must input your parameters into the console. If you need to check where the console is, please refer to this [image](#inputConsole):**
 ![image](https://github.com/user-attachments/assets/8c7a57cc-22fe-4771-b46c-6ff74ce61014)
 
 ### Step 3: **Run the normalization**
@@ -163,6 +163,29 @@ Press control enter once, and your files should be normalized in the "normalized
 **Again,** please note that if you're checking the files, make sure to close them before running the tool!
 
 ![image](https://github.com/user-attachments/assets/1f145250-e5e3-4e66-b35c-0c1871779d5f)
+
+You now should have the excel/csv file ready for input into your graphing software!
+
+
+# Runtime and Big O Analysis, Memory
+
+For anyone interested:
+
+Section 1: O(|# of lines| * |# of days| * | # of samples * # of duplicates + # of hashing parameters|)
+
+The algorithm runs in polynomial time scaling to the number of lines, timepoints and samples/duplicates you choose. Perhaps there is a more efficient way to structure the file format, but from a user perspective this standardizes the folder organization without sacrificing too much runtime. You save some time such that if the folder doesn't match any of your inputs, it'll skip it. Regardless, you have to load each file to pull out the area column anyways of the files you choose. You do save memory as your computer won't have to load the skipped folders's data.
+
+One improvement lies in the search technique, one likely could scale the |# of lines| and |# of days| down to a log scaled big O with an efficient search method or even a hashtable.
+
+Section 2: O(|# of lines| * |# of days| * |# of mean/median files + # of samples|)
+
+Similar to the previous file you still have to iterate through the the # of lines and days. You search for the mean median file and then iterate through the number of samples to normalize. This leads to the polynomial time algorithm.
+
+
+# Credits:
+This simple tool was intended for organoid area consolidation as UC San Diego's Dept of Psychiatry, Iakoucheva Lab.
+
+
 
 
 
