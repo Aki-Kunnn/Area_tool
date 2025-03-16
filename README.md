@@ -72,10 +72,10 @@ Lastly load up the functions for the tool, again simply press control enter unti
 ### Step 4: Input Your Prompts
 
 ![image](https://github.com/user-attachments/assets/af145ba7-0811-4737-99b9-a71338394264)
-
+<a id="inputConsole"></a>
 Press Control Enter on inputs. Now you should turn your attention to the console right below the code screen, boxed in yellow:
 
-<a id="inputConsole"></a>
+
 ![inputConsole](https://github.com/user-attachments/assets/1160db8c-0de2-41e5-9125-ca663d47dfd7)
 
 A total of 5 different prompts will appear:
