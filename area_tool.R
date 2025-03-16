@@ -1,4 +1,6 @@
 
+# For Extracting and Consolidating All Area Columns Into One File And Sorting Them:
+
     # STEP 1: Install All Necessary Packages for the Tool to Run
       install.packages(c("ggplot2", "dplyr", "tidyr", "broom", "hash", "data.table"))
     
@@ -290,18 +292,18 @@
         line_list <- strsplit(line_input, ",")[[1]]
         line_list <- trimws(line_list)
         
-        day_input <- readline(prompt = "Enter the day list: ")
+        day_input <- readline(prompt = "Enter the day list (e.g., 'day21, day22'): ")
         
         # Convert the input string into a list of days
         day_list <- strsplit(day_input, ",")[[1]]
         day_list <- trimws(day_list)  # Remove any leading/trailing spaces
         
-        treatment_input <- readline(prompt = "Enter the treatment list: ")
+        treatment_input <- readline(prompt = "Enter the treatment list (e.g., 'PFOA, GEN.X'): ")
         
         treatment_list <- strsplit(treatment_input, ",")[[1]]
         treatment_list <- trimws(treatment_list)
         
-        abb_input <- readline(prompt = "Enter the abbreviated treatment list: ")
+        abb_input <- readline(prompt = "Enter the abbreviated treatment list (e.g., 'OA, gx'), where OA = PFOA, and gx = GEN.X: ")
         
         abb_list <- strsplit(abb_input, ",")[[1]]
         abb_list <- trimws(abb_list)
@@ -325,17 +327,30 @@
       
       inputs <- get_user_inputs()
       
+      # C:/Users/sword/Downloads/Lab_Data/area_tool/test_dir - Copy
+      # day21
+      # Water_1, Water_2, DMSO_1, DMSO_2, PFOS, PFBS, GEN X, PFNA, PFOA, PFHXS
+      # Water_1, Water_2, DMSO_1, DMSO_2, os, bs, gx, na, pfoa, hx
+      
       # STEP 5: Press Control Enter on the Tester and You Will Have Complete This Half of the Code
       
       # Proceed with the tblCreator function
-      tester <- tblCreator(inputs$path, inputs$line_list, inputs$day_list, inputs$treatment_list)
+      consolidation <- tblCreator(inputs$path, inputs$line_list, inputs$day_list, inputs$treatment_list)
       
    
 
 
 ######################################################################################################################################
       
-      #path, dayList, line_List, name_List
+#NORMALIZATION TO YOUR BASE DAY#
+      
+      # STEP 1: Load All Necessary Packages and functions for the tool to run
+      library(dplyr)
+      library(tidyr)
+      library(broom)
+      library(hash)
+      library(data.table)
+
       preprocessing <- function(input) {
         
         parent_dir <- dirname(input$path)
@@ -408,8 +423,6 @@
           }
         }
       }
-      
-# INPUT2: Specify the line name! For example, 83.2_day_7 change 83.2 to whatever line you want
     
       get_user_inputs2 <- function() {
         path <- readline(prompt = "Enter the path to the combined_Lines folder: ")
@@ -471,21 +484,16 @@
         return(list(path = path, line_list = line_list, day_list = day_list, base_day = base_day_list, MMnames = MMnames, treatment_list = treatment_hash))
       }
       
-      # C:/Users/sword/Downloads/Lab_Data/area_tool/combined_Lines
-      # day21
-      # Water_1, Water_2, DMSO_1, DMSO_2, PFOS, PFBS, GEN X, PFNA, PFOA, PFHXS
-      # Water_1, Water_2, DMSO_1, DMSO_2, os, bs, gx, na, pfoa, hx
+######################################################################################################################################
+      
+      # STEP 2: Input your parameters and be wary of the base day input!  
       
       inputs2 <- get_user_inputs2()
       
-      print(inputs2$MMnames)
+      mmDir = file.path(dirname(inputs2$path), "MeanMedian")
       
-      mmDir = file.path(dirname(inputs$path), "MeanMedian")
-        
-      df_83_2 <- preprocessing(inputs2)
+      # STEP 3: Run your normalization, and check normalizedLines folder in your file directory
       
-      df_83_2 <- preprocessing(day7_83_2, day14_83_2, day21_83_2,nameList83_2)
+      df_normalization <- preprocessing(inputs2)
 
 ######################################################################################################################################
-
-
