@@ -1,10 +1,10 @@
 # Table of Contents:
 - [Install Instructions](#Install-Instructions)
-- [Before Running](#What-you-need-before-Hand)
+- [Before Running](#What-you-need-before-hand)
 - [Tool Usage](#How-to-Use-the-Tool)
   - [Extracting, Consolidating, Sorting](#For-Extracting-and-Consolidating-All-Area-Columns-Into-One-File-And-Sorting-Them)
   - [Normalization To Base Day](#Normalization-To-Your-Base-Day)
--  [Runtime, Big O, Memory](#Runtime-and-Big-O-Analysis,-Memory)
+-  [Runtime, Big O, Memory](#Runtime-and-Big-O-Analysis,Memory)
 - [Credits](#Credits)
 # Install Instructions
 
@@ -168,7 +168,7 @@ Press control enter once, and your files should be normalized in the "normalized
 You now should have the excel/csv file ready for input into your graphing software!
 
 
-# Runtime and Big O Analysis, Memory
+# Runtime and Big O Analysis,Memory
 
 For anyone interested:
 
