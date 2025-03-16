@@ -4,7 +4,7 @@
 - [Tool Usage](#How-to-Use-the-Tool)
   - [Extracting, Consolidating, Sorting](#For-Extracting-and-Consolidating-All-Area-Columns-Into-One-File-And-Sorting-Them)
   - [Normalization To Base Day](#Normalization-To-Your-Base-Day)
--  [Runtime, Big O, Memory](#Runtime-and-Big-O-Analysis,Memory)
+- [Runtime, Big O, Memory](#runtime-and-big-o-analysis-memory)
 - [Credits](#Credits)
 # Install Instructions
 
