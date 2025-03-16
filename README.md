@@ -75,7 +75,7 @@ Lastly load up the functions for the tool, again simply press control enter unti
 
 Press Control Enter on inputs. Now you should turn your attention to the console right below the code screen, boxed in yellow:
 
-![image](https://github.com/user-attachments/assets/1160db8c-0de2-41e5-9125-ca663d47dfd7)
+![inputConsole](https://github.com/user-attachments/assets/1160db8c-0de2-41e5-9125-ca663d47dfd7)
 
 A total of 5 different prompts will appear:
 
@@ -134,7 +134,29 @@ You should now get a confirmation in the console, it'll display a sanity check t
 
 ![image](https://github.com/user-attachments/assets/5b1091f3-39b5-4dae-8e52-f48e51da98de)
 
-# Normalization To Your Base Day
+## Normalization To Your Base Day
+
+- Assume that this is a completely seperate step, the idea is such that as you add more timepoints or lines, you can run this normalization seperate to the consolidation above
+- The input are the same as the previous step, except with base day.
+- The output of is a normalized file to your base day, assume that you can put this file into whatever imaging/visualization software you would like
+
+### Step 1: **Load the packages and functions:**
+
+Similar to the previous step, please load all the packages and functions:
+
+![image](https://github.com/user-attachments/assets/dc48cc01-0690-4e57-8a29-de702017c3ac)
+
+Simply press control enter until your cursor reaches the line with all the hashtags. You've now completed step 1.
+
+### Step 2: **Input your paramters**
+
+The parameters are **ALMOST** exactly the same as the previous section. However, **base day** is an additional input. We assume that you've run the previous section such that there is a meanMedian directory that contains your base day. For example, let us say you're running this on line 98, timepoint of day 21. Let us say your base day is day 3, make sure that you have a file in the meanMedian folder that has day  3!
+
+**Note: similar to the previous section as well, you must input your parameters into the console, if you need to check where it is, please refer to this ![image](#inputConsole):**
+![image](https://github.com/user-attachments/assets/758fdeaa-6f9a-4d99-b40a-f0306ec25607)
+
+
+
 
 
 
