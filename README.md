@@ -168,7 +168,7 @@ Press control enter once, and your files should be normalized in the "normalized
 You now should have the excel/csv file ready for input into your graphing software!
 
 
-# Runtime and Big O Analysis,Memory
+# Runtime and Big O Analysis, Memory
 
 For anyone interested:
 
