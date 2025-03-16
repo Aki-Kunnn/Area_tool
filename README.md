@@ -4,7 +4,8 @@
 - [Tool Usage](#How-to-Use-the-Tool)
   - [Extracting, Consolidating, Sorting](#For-Extracting-and-Consolidating-All-Area-Columns-Into-One-File-And-Sorting-Them)
   - [Normalization To Base Day](#Normalization-To-Your-Base-Day)
-
+-  [Runtime, Big O, Memory](#Runtime-and-Big-O-Analysis,-Memory)
+- [Credits](#Credits)
 # Install Instructions
 
 Hover over the file that says area_tool, click it and then press the download button on the top right and obtain the R script.
@@ -179,8 +180,7 @@ One improvement lies in the search technique, one likely could scale the |# of l
 
 Section 2: O(|# of lines| * |# of days| * |# of mean/median files + # of samples|)
 
-Similar to the previous file you still have to iterate through the the # of lines and days. You search for the mean median file and then iterate through the number of samples to normalize. This leads to the polynomial time algorithm.
-
+Similar to the previous file you still have to iterate through the the # of lines and days. You search for the mean median file and then iterate through the number of samples to normalize. You also save some memory by skipping over files that are not in your input paramters. Overall, this leads to the polynomial time algorithm.
 
 # Credits:
 This simple tool was intended for organoid area consolidation as UC San Diego's Dept of Psychiatry, Iakoucheva Lab.
