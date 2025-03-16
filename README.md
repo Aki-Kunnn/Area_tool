@@ -131,7 +131,7 @@ Enter the treatment list: oa, gx, as, WATER_1, WATER_2
 #Notice how the abbreviations match the treatment list from prompt 4!
 ```
 
-You should now get a confirmation in the console, it'll display a sanity check to make sure your conditions matched the abbreviated list you inputted. No worries if you notice something off, simply run step 4 again.
+You should now get a confirmation in the console, it'll display a sanity check to make sure your conditions matched the abbreviated list you inputted. No worries if you notice something off, simply run step 4 again. **Important** make sure that if you're checking the files to close them before you try running the tool! You will get an error message otherwise because your computer is trying to open a file that is being used.
 
 ![image](https://github.com/user-attachments/assets/5b1091f3-39b5-4dae-8e52-f48e51da98de)
 
@@ -151,10 +151,18 @@ Simply press control enter until your cursor reaches the line with all the hasht
 
 ### Step 2: **Input your paramters**
 
-The parameters are **ALMOST** exactly the same as the previous section. However, **base day** is an additional input. We assume that you've run the previous section such that there is a meanMedian directory that contains your base day. For example, let us say you're running this on line 98, timepoint of day 21. Let us say your base day is day 3, make sure that you have a file in the meanMedian folder that has day  3!
+The parameters are **ALMOST** exactly the same as the previous section. However, **base day** is an additional input. We assume that you've run the previous section such that there is a meanMedian directory that contains your base day. For example, let us say you're running this on line 98, timepoint of day 21. Let us say your base day is day 3, make sure that you have a file in the meanMedian folder that has day  3! Run up to mmDir!
 
-**Note: similar to the previous section as well, you must input your parameters into the console, if you need to check where it is, please refer to this [image](#inputConsole):**
-![image](https://github.com/user-attachments/assets/758fdeaa-6f9a-4d99-b40a-f0306ec25607)
+**Note: for your inputs, it is similar to the previous section as well. You must input your parameters into the console. If you need to check where it is, please refer to this [image](#inputConsole):**
+![image](https://github.com/user-attachments/assets/8c7a57cc-22fe-4771-b46c-6ff74ce61014)
+
+### Step 3: **Run the normalization**
+
+Press control enter once, and your files should be normalized in the "normalizedFiles" folder. 
+
+**Again,** please note that if you're checking the files, make sure to close them before running the tool!
+
+![image](https://github.com/user-attachments/assets/1f145250-e5e3-4e66-b35c-0c1871779d5f)
 
 
 
