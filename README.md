@@ -3,6 +3,7 @@
 - [Before Running](#What-you-need-before-Hand)
 - [Tool Usage](#How-to-Use-the-Tool)
   - [Extracting, Consolidating, Sorting](#For-Extracting-and-Consolidating-All-Area-Columns-Into-One-File-And-Sorting-Them)
+  - [Normalization To Base Day](#Normalization-To-Your-Base-Day)
 
 # Install Instructions
 
@@ -133,5 +134,7 @@ You should now get a confirmation in the console, it'll display a sanity check t
 
 ![image](https://github.com/user-attachments/assets/5b1091f3-39b5-4dae-8e52-f48e51da98de)
 
+# Normalization To Your Base Day
 
- 
+
+
